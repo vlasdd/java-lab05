@@ -1,87 +1,38 @@
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import static org.junit.Assert.assertEquals;
 
 public class MainTest {
+    private static final String INPUT = "From fairest creatures we desire increase,That thereby beauty's rose might never die,But as the riper should by time decease,His tender heir might bear his memory:But thou contracted to thine own bright eyes,Feed'st thy light's flame with self-substantial fuel,Making a famine where abundance lies,Thy self thy foe, to thy sweet self too cruel:Thou that art now the world's fresh ornament,And only herald to the gaudy spring,Within thine own bud buriest thy content,And, tender churl, mak'st waste in niggarding:Pity the world, or else this glutton be,To eat the world's due, by the grave and thee.";
+
     @Test 
-    public void testUrls() {
-        String url1 = "http:";
-        String url2 ="http:/";
-        String url3 ="asdsad";
-        String url4 ="ht://.com";
-        String url5 ="htttps://.com";
-        String url6 ="2131231://.com";
-        String url7 ="2131231123132";
+    public void test() {
+        Map<String, Map<Integer, List<String>>> result = Arrays.stream(INPUT.split("[:,\\s\\-]+"))
+        .collect(Collectors.groupingBy(word -> String.valueOf(word.charAt(0)),
+                Collectors.groupingBy(String::length, Collectors.toList())));
 
-        String url8 = "http://mysite.com/orders/123/details/1";
-        String url9 ="https://kahoot.com/10/orders/20/simple";
-        String url10 ="http://kahoot.com/10/orders/20/simple";
-        String url11 ="https://kahoot.com/20";
+        // Or this if we don't consider the case of the word and use toLowerCase at the start 
+        // Map<String, Map<Integer, List<String>>> result = Arrays.stream(INPUT.split("[:,\\s\\-]+"))
+        // .map(String::toLowerCase)
+        // .collect(Collectors.groupingBy(word -> String.valueOf(word.charAt(0)),
+        //         Collectors.groupingBy(String::length, Collectors.toList())));
 
-        assertFalse(Main.isValidUrl(url1));
-        assertFalse(Main.isValidUrl(url2));
-        assertFalse(Main.isValidUrl(url3));
-        assertFalse(Main.isValidUrl(url4));
-        assertFalse(Main.isValidUrl(url5));
-        assertFalse(Main.isValidUrl(url6));
-        assertFalse(Main.isValidUrl(url7));
-
-        assertTrue(Main.isValidUrl(url8));
-        assertTrue(Main.isValidUrl(url9));
-        assertTrue(Main.isValidUrl(url10));
-        assertTrue(Main.isValidUrl(url11));
+        assertEquals("[abundance]", result.get("a").get(9).toString());
+        assertEquals("[by, be, by]", result.get("b").get(2).toString());
+        assertEquals("[flame, fresh]", result.get("f").get(5).toString());
+        assertEquals("[gaudy, grave]", result.get("g").get(5).toString());
+        assertEquals("[should, spring]", result.get("s").get(6).toString());
+        assertEquals("[substantial]", result.get("s").get(11).toString());
+        assertEquals("[the, thy, thy, thy, too, the, the, thy, the, the, the]",
+                result.get("t").get(3).toString());
+        // Or this if we don't consider the case of the word and use toLowerCase at the start
+        // (added additional thy here because the upperCased Thy would turn into just thy)
+        // assertEquals("[the, thy, thy, thy, thy, too, the, the, thy, the, the, the]",
+        // result.get("t").get(3).toString());        
+        assertEquals("[where, waste, world]", result.get("w").get(5).toString());
     }
-    // @Test
-    // public void testExtractWordsFromSentence() {
-    //     String sentence = "Це інший приклад речення 3?";
-    //     int wordLength = 5;
-    //     HashSet<String> words = Main.extractWordsFromSentence(sentence, wordLength);
-
-    //     assertTrue(words.contains("інший"));
-
-    //     assertFalse(words.contains("це"));
-    //     assertFalse(words.contains("3"));
-    //     assertFalse(words.contains("?"));
-    // }
-
-    // @Test
-    // public void testExtractWordsFromSentenceWithPunctuationAndCase() {
-    //     String sentence = "Це речення містить РОЗДІЛОВІ ЗНАКИ, та інші. Включає КапіталіЗовані слова СЛОВО і СЛОВОІФІВ.";
-    //     int wordLength = 5;
-    //     HashSet<String> words = Main.extractWordsFromSentence(sentence, wordLength);
-
-    //     // Перевірка наявності унікальних слів (без врахування регістру)
-    //     assertTrue(words.contains("СЛОВО"));
-    //     assertTrue(words.contains("ЗНАКИ"));
-
-    //     // Перевірка відсутності інших слів
-    //     assertFalse(words.contains("це"));
-    //     assertFalse(words.contains("речення"));
-    //     assertFalse(words.contains("містить"));
-    //     assertFalse(words.contains("СЛОВОІФІВ"));
-    // }
-
-    // @Test
-    // public void testFindWords() {
-    //     String text = "Це тестовий текст. Це речення 1. В другому реченні немає запитання. Чи працює програма правильно? Запитання 2. Програмування - це цікаво! Якщо у вас немає запитань, будь ласка, введіть слово завдовжки 5 символів. Це інший приклад речення 3? Текст також може містити числа, наприклад, 12345. Запитання 4: це останнє речення?";
-    //     int wordLength = 7;
-    //     HashSet<String> uniqueWords = Main.findWords(text, wordLength);
-        
-    //     assertTrue(uniqueWords.contains("приклад"));
-    //     assertTrue(uniqueWords.contains("речення"));
-    //     assertTrue(uniqueWords.contains("останнє"));
-
-    //     assertFalse(uniqueWords.contains("тестовий"));
-    //     assertFalse(uniqueWords.contains("текст"));
-    //     assertFalse(uniqueWords.contains("речення1"));
-    //     assertFalse(uniqueWords.contains("програму"));
-    // }
-
-    // @Test
-    // public void testFindWordsEmptyInput() {
-    //     String text = "";
-    //     int wordLength = 5;
-    //     HashSet<String> uniqueWords = Main.findWords(text, wordLength);
-
-    //     assertTrue(uniqueWords.isEmpty());
-    // }
 }
